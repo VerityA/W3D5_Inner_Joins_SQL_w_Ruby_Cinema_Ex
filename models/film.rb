@@ -1,4 +1,5 @@
 require_relative('../db/sql_runner.rb')
+require_relative('screening.rb')
 
 class Film
 
@@ -60,7 +61,14 @@ class Film
     WHERE film_id = $1"
     count = SqlRunner.run(sql,[@id])
     return count[0]
-    
+  end
+
+  def customers_at_particular_screening_count(screening)
+    sql = "SELECT COUNT (*) FROM tickets
+    WHERE tickets.film_id = $1 and tickets.screening_id = $2;"
+    values = [@id, screening.id]
+    count = SqlRunner.run(sql,values)
+    return count[0]['count'].to_i
   end
 
   def Film.delete_all()

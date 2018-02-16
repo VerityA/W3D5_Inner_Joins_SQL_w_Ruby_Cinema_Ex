@@ -28,8 +28,3 @@ CREATE TABLE tickets (
   film_id INT4 REFERENCES films(id) ON DELETE CASCADE,
   screening_id INT4 REFERENCES screenings(id) ON DELETE CASCADE
 );
-
-SELECT customers.id, COUNT(tickets.customer_id) as ticket_count
-FROM customers LEFT JOIN tickets
-ON customers.id = tickets.customer_id
-GROUP BY customers.id;

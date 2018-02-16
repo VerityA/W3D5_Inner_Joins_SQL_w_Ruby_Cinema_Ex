@@ -1,5 +1,6 @@
 require_relative('../db/sql_runner.rb')
-require_relative('film')
+require_relative('film.rb')
+require_relative('screening.rb')
 
 class Customer
   attr_reader :id
@@ -55,7 +56,8 @@ class Customer
     return films.map { |film| Film.new(film) }
   end
 
-  def buy_ticket(film, ticket)
+  def buy_ticket(film, ticket, screening)
+    return if film.customers_at_particular_screening_count(screening) >= screening.max_capacity()
     @funds -= film.price()
     sql = "UPDATE customers
     SET (
