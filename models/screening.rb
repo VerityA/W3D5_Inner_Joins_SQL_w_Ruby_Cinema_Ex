@@ -33,6 +33,19 @@ class Screening
     SqlRunner.run(sql)
   end
 
+  def Screening.all()
+    sql = "SELECT * FROM screenings;"
+    screenings = SqlRunner.run(sql)
+    return screenings.map { |screening| Screening.new(screening)  }
+  end
+
+  def Screening.find_by_id(screening_id)
+    sql = "SELECT * FROM screenings
+    WHERE id = $1;"
+    result = SqlRunner.run(sql, [screening_id])
+    return Screening.new(result[0])
+  end
+
 
 
 end

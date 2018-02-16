@@ -82,4 +82,17 @@ class Film
     return films.map { |film| Film.new(film)  }
   end
 
+  def most_popular_screening()
+    sql = "SELECT screening_id, COUNT(screening_id) as screening_count
+    FROM tickets
+    WHERE film_id = $1
+    GROUP BY screening_id
+    ORDER BY screening_count DESC;"
+    results = SqlRunner.run(sql, [@id])
+    all_screenings = results.map { |result| result}
+    most_pop_id = all_screenings[0]['screening_id'].to_i
+    Screening.find_by_id(most_pop_id)
+  end
+
+
 end
