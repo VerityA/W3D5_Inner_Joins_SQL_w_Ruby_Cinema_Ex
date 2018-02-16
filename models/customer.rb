@@ -1,4 +1,5 @@
 require_relative('../db/sql_runner.rb')
+require_relative('film')
 
 class Customer
   attr_reader :id
@@ -52,6 +53,27 @@ class Customer
     WHERE tickets.customer_id = $1"
     films = SqlRunner.run(sql, [@id])
     return films.map { |film| Film.new(film) }
+  end
+
+  def buy_ticket(film, ticket)
+    @funds -= film.price()
+    sql = "UPDATE customers
+    SET (
+      name,
+      funds)
+    = ($1, $2)
+    WHERE id = $3;"
+    values = [@name, @funds]
+    update()
+    ticket.save()
+  end
+
+  def ticket_count()
+    sql = "SELECT COUNT(*) FROM tickets
+    WHERE customer_id = $1
+    "
+    count = SqlRunner.run(sql, [@id])
+    return count[0]
   end
 
   def Customer.delete_all()
